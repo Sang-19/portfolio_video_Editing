@@ -3,9 +3,9 @@ import os
 import requests
 import streamlit as st
 from streamlit_option_menu import option_menu
-import streamlit.components.v1 as components
-
+import gspread
 st.set_page_config(layout="wide")
+
 
 st.markdown(
     """
@@ -29,14 +29,14 @@ def home():
               st.write("I’m a videographer and photographer who loves turning everyday moments into engaging visual stories.") 
               st.write("I create content around running, workouts, and vlogs, while also pursuing my final year in Computer Science Engineering.")
               st.write("I enjoy combining creativity, storytelling, and technology to create videos that feel authentic and impactful.")
-              st.button("View my work")
+              
           # 3. Add elements to the right column
     with right_column:
               st.image("personal.jpg", caption="Welcome")
 
 
 def instagram():
-        components.html("""
+        st.iframe("""
 <style>
 html, body {
     margin: 0;
@@ -119,6 +119,9 @@ iframe {
 """, height=320)
 
 def contact():
+    credentials = st.secrets["gcp_service_account"]
+    gc = gspread.service_account_from_dict(credentials)
+    sheet = gc.open("Portfolio Contact Messages").sheet1
     left, right = st.columns(2)
     with left:
            st.title("Contact me")
@@ -133,7 +136,8 @@ def contact():
                       if not name or not email or not message:
                               st.warning("Please fill out all fields bfore submiting")
                       else:
-                             st.success(f"Thankk you {name}! Your message has been sent")
+                             sheet.append_row([name, email, message])
+                             st.success(f"Thank you {name}! Your message has been sent")
                        
 
 home()
