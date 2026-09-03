@@ -52,7 +52,7 @@ html, body {
     display: flex;
     gap: 20px;
     width: max-content;
-    animation: slide 50s linear infinite;
+    animation: slide 100s linear infinite;
 }
 
 .card {
